@@ -1,0 +1,1 @@
+angular.module("marvelapp").run(["$templateCache", function($templateCache) {$templateCache.put("/components/mc-navbar/mc-navbar.html","\n<div class=\"navbar navbar-inverse navbar-fixed-top\">\n  <div class=\"container\">\n    <div class=\"navbar-header\"><a href=\"/\" class=\"navbar-brand\">{{appName}}</a></div>\n  </div>\n</div>");}]);
