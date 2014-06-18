@@ -1,0 +1,11 @@
+doctype html
+html(lang="en", ng-app="marvelapp")
+  head
+    title Comic Browser
+    link(href="/favicon.ico", rel="shortcut icon", type="image/x-icon")
+    link(rel="stylesheet", href="/vendor/toastr/toastr.css")
+    link(rel="stylesheet", href="/app.css")
+
+  body(ng-controller="appCtrl", ng-cloak)
+    block main-content
+    include scripts
