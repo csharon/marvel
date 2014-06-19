@@ -1,5 +1,10 @@
 
-ul.list-group
-  li.list-group-item(ng-repeat="item in items") {{item[labelField]}}
-    span.badge(ng-if="countField") {{item[countField]}}
+ul.list-group.mc-list-group
+  li.list-group-item(ng-repeat="item in items")
+    div.clearfix
+      img.img-responsive.img-rounded.pull-left(ng-src="{{item[thumbnail]}}", ng-if="thumbnail")
+      div.label-content
+        h3 {{item[labelField]}}
+        p {{item[description]}}
+      span.badge.pull-right(ng-if="countField") {{item[countField]}}
 
