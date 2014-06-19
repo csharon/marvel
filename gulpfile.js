@@ -10,7 +10,10 @@ var gulp = require('gulp'),
   jade = require('gulp-jade'),
   ngtemplates = require('gulp-angular-templatecache'),
   compass = require('gulp-compass'),
-  bowerFiles = require('gulp-bower-files');
+  bowerFiles = require('gulp-bower-files'),
+  karma = require('karma').server,
+  karmaConf = require('./karma.conf.js'),
+  _ = require('lodash');
 
 gulp.task('watch', function () {
   gulp.watch(['app/**/*.sass'], ['sass']);
@@ -56,7 +59,7 @@ gulp.task('sass', function () {
 gulp.task('templates', function () {
   gulp.src(['app/**/*.jade', '!app/index.jade', '!app/partials/**'])
     .pipe(jade({pretty: true}))
-    .pipe(ngtemplates('marvel.tpls.js', {module: 'marvelapp', root: '/'}))
+    .pipe(ngtemplates('marvel.tpls.js', {module: 'mc.tmpls', root: '/', standalone: true}))
     .pipe(gulp.dest('dev'));
 });
 
@@ -76,4 +79,18 @@ gulp.task('serve:dev', function () {
       console.log('restarted dog!');
     });
 
+});
+
+gulp.task('createtesttmpls', function () {
+  gulp.src(['app/**/*.jade', '!app/index.jade', '!app/partials/**'])
+    .pipe(jade({pretty: true}))
+    .pipe(ngtemplates('marvel.tpls.js', {module: 'mc.tmpls', root: '/', standalone: true}))
+    .pipe(gulp.dest('test/spec'));
+});
+
+/**
+ * Run test once and exit
+ */
+gulp.task('test', function (done) {
+  karma.start(_.assign({}, karmaConf, {singleRun: true}), done);
 });

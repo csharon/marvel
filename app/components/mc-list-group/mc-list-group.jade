@@ -1,0 +1,5 @@
+
+ul.list-group
+  li.list-group-item(ng-repeat="item in items") {{item[labelField]}}
+    span.badge(ng-if="countField") {{item[countField]}}
+
