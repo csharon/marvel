@@ -17,6 +17,8 @@ angular.module('mc.components.ListGroup', ['mc.tmpls'])
       scope: {
         countField: '@',
         labelField: '@',
+        thumbnail: '@',
+        description: '@',
         items: '='
       }
     };

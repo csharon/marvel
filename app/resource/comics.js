@@ -18,6 +18,7 @@ angular.module('mc.resource.Comics', ['restangular'])
       });
       Restangular.extendModel('comics', function (model) {
         model.characterCount = model.characters.items.length;
+        model.thumb = model.thumbnail.path + '.' + model.thumbnail.extension;
         return model;
       });
 
