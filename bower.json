@@ -40,7 +40,10 @@
       "main": "./fonts/*"
     },
     "sass-bootstrap": {
-      "main": "./dist/js/bootstrap.js"
+      "main": {
+        "development": "./dist/js/bootstrap.js",
+        "production": "./dist/js/bootstrap.min.js"
+      }
     },
     "angular-ui-bootstrap": {
       "main": [

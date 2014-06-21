@@ -11,34 +11,63 @@ var gulp = require('gulp'),
   ngtemplates = require('gulp-angular-templatecache'),
   compass = require('gulp-compass'),
   bowerFiles = require('gulp-bower-files'),
+  karmaCommonConf = require('./karma-common-conf.js');
   karma = require('karma').server,
-  karmaConf = require('./karma.conf.js'),
+  open = require("gulp-open"),
   _ = require('lodash');
 
+var env = process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
+/**
+ *  Main Tasks
+ */
+gulp.task('dev', ['dev:build', 'serve:dev', 'watch', 'tdd', 'open:dev']);
+gulp.task('test', ['createtesttmpls', 'test:ci']);
+gulp.task('tdd', ['createtesttmpls', 'autotest', 'watch:testtemplates']);
+
+/**
+ *  Variables
+ */
+var paths = {
+  dev: 'dev/',
+  vendor_dev: 'dev/vendor/',
+  prod: 'public/'
+};
+
+var filesets = {
+  templateCache: ['app/**/*.jade', '!app/index.jade', '!app/partials'],
+  templates: ['app/index.jade', 'app/partials/*.jade'],
+  js: ['app/**/*.js', '!app/**/*.spec.js'],
+  sass: ['app/**/*.sass'],
+  dev: 'dev/**'
+};
+
+/**
+ *  Development Sub Tasks
+ */
+
 gulp.task('watch', function () {
-  gulp.watch(['app/**/*.sass'], ['sass']);
-  gulp.watch(['app/index.jade', 'app/partials/*.jade'], ['jade:index']);
-  gulp.watch(['app/**/*.js', '!app/**/*.spec.js'], ['copy:js']);
-  gulp.watch(['app/**/*.jade', '!app/index.jade', '!app/partials'], ['templates']);
+  gulp.watch(filesets.sass, ['sass']);
+  gulp.watch(filesets.templates, ['jade:index']);
+  gulp.watch(filesets.js, ['copy:js']);
+  gulp.watch(filesets.templateCache, ['templateCache']);
 });
 
-gulp.task('dev:build', ['copy:js', 'templates', 'jade:index', 'sass', 'copy:vendor']);
-
-gulp.task('dev', ['dev:build', 'serve:dev', 'watch']);
+gulp.task('dev:build', ['copy:js', 'templateCache', 'jade:index', 'sass', 'copy:vendor']);
 
 gulp.task('clean:dev', function () {
-  gulp.src('dev/**', {read: false, force: true})
+  gulp.src(filesets.dev, {read: false, force: true})
     .pipe(clean());
 });
 
 gulp.task('copy:vendor', function () {
   bowerFiles()
-    .pipe(gulp.dest('dev/vendor'));
+    .pipe(gulp.dest(paths.vendor_dev));
 });
 
 gulp.task('copy:js', function () {
-  gulp.src(['app/**/*.js', '!app/**/*.spec.js'])
-    .pipe(gulp.dest('dev'));
+  gulp.src(filesets.js)
+    .pipe(gulp.dest(paths.dev));
 });
 
 gulp.task('jade:index', function () {
@@ -56,12 +85,17 @@ gulp.task('sass', function () {
     }));
 });
 
-gulp.task('templates', function () {
-  gulp.src(['app/**/*.jade', '!app/index.jade', '!app/partials/**'])
+gulp.task('templateCache', function () {
+  gulp.src(filesets.templateCache)
     .pipe(jade({pretty: true}))
     .pipe(ngtemplates('marvel.tpls.js', {module: 'mc.tmpls', root: '/', standalone: true}))
-    .pipe(gulp.dest('dev'));
+    .pipe(gulp.dest(paths.dev));
 });
+
+gulp.task('open:dev', function () {
+  gulp.src('dev/index.html')
+    .pipe(open("", {url: 'http://localhost:3000'}))
+})
 
 gulp.task('serve:dev', function () {
   nodemon({
@@ -70,7 +104,7 @@ gulp.task('serve:dev', function () {
     ignore: [
       'app',
       'node_modules',
-      'build',
+      'public',
       'test',
       'gulpfile.js',
       'karma.conf.js'
@@ -81,16 +115,32 @@ gulp.task('serve:dev', function () {
 
 });
 
+/**
+ *  Production sub tasks
+ */
+
+
+
+/**
+ * Testing sub tasks
+ */
+
 gulp.task('createtesttmpls', function () {
-  gulp.src(['app/**/*.jade', '!app/index.jade', '!app/partials/**'])
+  gulp.src(filesets.templateCache)
     .pipe(jade({pretty: true}))
     .pipe(ngtemplates('marvel.tpls.js', {module: 'mc.tmpls', root: '/', standalone: true}))
     .pipe(gulp.dest('test/spec'));
 });
 
-/**
- * Run test once and exit
- */
-gulp.task('test', function (done) {
-  karma.start(_.assign({}, karmaConf, {singleRun: true}), done);
+gulp.task('watch:testtemplates', function () {
+  gulp.watch(filesets.templateCache, ['createtesttmpls']);
 });
+
+gulp.task('autotest', function (done) {
+  karma.start(_.assign({}, karmaCommonConf), done);
+});
+
+gulp.task('test:ci', function (done) {
+  karma.start(_.assign({}, karmaCommonConf, {singleRun: true}), done);
+});
+
