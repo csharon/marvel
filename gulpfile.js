@@ -56,8 +56,8 @@ gulp.task('watch', function () {
 gulp.task('dev:build', ['copy:js', 'templateCache', 'jade:index', 'sass', 'copy:vendor']);
 
 gulp.task('clean:dev', function () {
-  gulp.src(filesets.dev, {read: false, force: true})
-    .pipe(clean());
+  return gulp.src(filesets.dev, {read: false})
+    .pipe(clean({force: true}));
 });
 
 gulp.task('copy:vendor', function () {
