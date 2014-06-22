@@ -4,10 +4,10 @@ form(name="comicFilter", role="form", ng-submit="getComics()")
     input.form-control(id="title", ng-model="filterOptions.title", placeholder="title", type="text")
   div.form-group
     label Hide Variants
-      input(type="checkbox", ng-model="filterOptions.noVariants")
+      input.form-control(type="checkbox", ng-model="filterOptions.noVariants")
   div.form-group
     label(for="dateDescriptor") Time Period
-    select(id="dateDescriptor", ng-model="filterOptions.dateDescriptor")
+    select.form-control(id="dateDescriptor", ng-model="filterOptions.dateDescriptor")
       option(value="") Date Range
       option(value="lastWeek") Last Week
       option(value="thisWeek") This Week
