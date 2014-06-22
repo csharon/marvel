@@ -1,0 +1,6 @@
+div.clearfix(ng-click="selectItem()")
+  img.img-responsive.img-rounded.pull-left(ng-src="{{item[thumbnail]}}", ng-if="thumbnail")
+  div.label-content
+    h3 {{item[labelField]}}
+    p {{item[description]}}
+  span.badge.pull-right(ng-if="countField") {{item[countField]}}

@@ -1,43 +1,34 @@
 /**
  * Created by csharon on 6/18/14.
  */
-angular.module('mc.views.ComicList', ['mc.components.ListGroup', 'mc.resource.Comics', 'xd.services.toastr'])
+angular.module('mc.views.ComicList', [
+    'mc.components.ListGroup',
+    'xd.services.toastr',
+    'mc.components.ComicFilter',
+    'mc.services.ComicListModel'
+  ])
 
-  .controller('comicListCtrl', function ($scope, comicResource, xdToastr) {
+  .controller('comicListCtrl', function ($scope, comicListModel) {
 
     $scope.comics = [];
-
-    $scope.filterOptions = {
-      formatType: '',
-      noVariants: false,
-      dateDescriptor: '',
-      hasDigitalIssue: false,
-      title: '',
-      limit: 10
-    };
-
     $scope.comicsLoading = false;
 
-    $scope.getComics = function () {
-      $scope.comicsLoading = true;
-      var opts = _.omit($scope.filterOptions, function (val) {
-        return val === '' || val === false;
-      });
+    $scope.$watch(
+      function () {
+        return comicListModel.comics();
+      },
+      function (val) {
+        $scope.comics = val;
+      }
+    );
 
-      comicResource.list(opts).then(
-        function (resp) {
-          $scope.comics = resp;
-        },
-        function (err) {
-          xdToastr.error(err.data.status, err.statusText);
-
-        }
-      ).finally(function () {
-          $scope.comicsLoading = false;
-        }
-      );
-    };
-
-
+    $scope.$watch(
+      function () {
+        return comicListModel.comicsLoading();
+      },
+      function (val) {
+        $scope.comicsLoading = val;
+      }
+    );
 
   });
