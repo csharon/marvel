@@ -1,21 +1,23 @@
-form.form-inline.col-xs-12(name="comicFilter", role="form", ng-submit="getComics()")
-  div.form-group
+form.form-inline.clearfix(name="comicFilter", role="form", ng-submit="getComics()")
+  div.form-group.col-xs-4
     label.sr-only(for="title") title
     input.form-control(id="title", ng-model="filterOptions.title", placeholder="title", type="text")
+
   div.form-group
-    label Hide Variants
-      input(type="checkbox", ng-model="filterOptions.noVariants")
-  div.form-group
-    label.sr-only(for="dateDescriptor") Date Descriptor
-    select(id="dateDescriptor", ng-model="filterOptions.dateDescriptor")
-      option(value="") Date Range
+    label.sr-only(for="dateDescriptor") Time Period
+    select.form-control(id="dateDescriptor", ng-model="filterOptions.dateDescriptor")
+      option(value="") Time Period
       option(value="lastWeek") Last Week
       option(value="thisWeek") This Week
       option(value="nextWeek") Next Week
       option(value="thisMonth") This Month
   div.form-group
-    label.sr-only(for="limit") limit
-    input.form-control.input-sm(id="limit", ng-model="filterOptions.limit", placeholder="limit", type="number")
+    label.sr-only(for="limit") Limit Results
+    input.form-control(id="limit", ng-model="filterOptions.limit", placeholder="limit", type="number")
 
-  button.btn.btn-primary(type="submit") {{ !comicsLoading ? 'Get Comics' : '' }}
+  div.form-group
+    label Hide Variants
+      input.checkbox-inline(type="checkbox", ng-model="filterOptions.noVariants")
+
+  button.btn.btn-primary.pull-right(type="submit") {{ !comicsLoading ? 'Get Comics' : '' }}
     i.fa.fa-spin.fa-spinner(ng-if="comicsLoading")

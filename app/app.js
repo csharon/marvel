@@ -18,7 +18,8 @@ angular.module('marvelapp', [
     comicResourceProvider.setConfig({apikey: 'd20b1dded050ba69f393209d985835eb'});
 
     $stateProvider
-      .state('comiclist', { url: '/', templateUrl: '/views/comic-list/comic-list.html', controller: 'comicListCtrl'});
+      .state('comiclistStacked', { url: '/', templateUrl: '/views/comic-list/comic-list-stacked.html', controller: 'comicListCtrl'})
+      .state('comiclistSplit', { url: '/split', templateUrl: '/views/comic-list/comic-list-split.html', controller: 'comicListCtrl'});
 
     $urlRouterProvider.otherwise('/');
   });
